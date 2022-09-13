@@ -3,6 +3,8 @@ from requests.auth import HTTPBasicAuth
 from geopy.geocoders import Nominatim
 from decouple import config
 
+from create_table import create_table_with_content
+
 
 def forecasts(latitude, longitude):
     # complete url address
@@ -15,7 +17,7 @@ def forecasts(latitude, longitude):
     try:
         x = response.json()
         if x['status'] == 'OK':
-            return x['data']
+            return x['data'][0]['coordinates'][0]['dates']
         else:
             print(" City Not Found ")
     except requests.exceptions.RequestException as e:
@@ -53,7 +55,8 @@ if __name__ == '__main__':
                 location = geolocator.geocode(city_name)
                 lat = str(location.latitude)
                 lon = str(location.longitude)
-                print(forecasts(lat, lon))
+                create_table_with_content(city_name, forecasts(lat, lon))
+                print(f'Created Table - {city_name}')
                 invalid_city = False
             except AttributeError as e:
                 print('\nEnter a valid city name!')
