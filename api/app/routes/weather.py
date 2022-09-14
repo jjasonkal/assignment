@@ -30,7 +30,7 @@ async def get_last_hour_weekly_forecast() -> Weather:
 
 
 @router.get("/average-of-last-3-forecasts")
-async def average_of_last_3_forecasts() -> Weather:
+async def get_average_of_last_3_forecasts() -> Weather:
     weather = db.average_of_last_3_forecasts()
 
     if not weather:
@@ -40,7 +40,7 @@ async def average_of_last_3_forecasts() -> Weather:
 
 
 @router.get("/top-n-locations-of-each-metric")
-async def top_n_locations_of_each_metric(n: int) -> Weather:
+async def get_top_n_locations_of_each_metric(n: int) -> Weather:
     weather = db.top_n_locations_of_each_metric(n)
 
     if not weather:
