@@ -1,11 +1,12 @@
-Select
-    name,
+SELECT
+    cities.name,
     max({value}) as maximum
-From
+FROM
     forecasts
-where
+JOIN cities on cities.id = forecasts.city_id
+WHERE
     DATE(date) >= DATE(NOW())
-Group By
+GROUP BY
     name
-order by
-    max({value}) desc limit {n};
+ORDER BY
+    max({value}) DESC limit {n};

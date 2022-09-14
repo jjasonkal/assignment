@@ -9,11 +9,12 @@ class Metrics(BaseModel):
 
 
 class Weather(Metrics):
-    date: str
+    date: datetime
     since: datetime
 
 
-class DistinctNames(BaseModel):
+class DistinctID(BaseModel):
+    id: int
     name: str
 
 
@@ -22,7 +23,7 @@ class MetricsColumns(BaseModel):
 
 
 class AverageWeather(Metrics):
-    date: str
+    date: datetime
 
 
 class TopMetrics(BaseModel):

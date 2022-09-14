@@ -1,23 +1,23 @@
 SELECT
     date,
-    avg(t_2m) as t_2m,
-    avg(dew_point_2m) as dew_point_2m,
-    avg(absolute_humidity_2m) as absolute_humidity_2m
+    CAST(avg(t_2m) AS decimal(5,2)) as t_2m,
+    CAST(avg(dew_point_2m) AS decimal(6,2)) as dew_point_2m,
+    CAST(avg(absolute_humidity_2m) AS decimal(5,2)) as absolute_humidity_2m
 FROM forecasts
 WHERE
-    name = '{name}' and
+    city_id = {city_id} and
     since in (
         SELECT distinct
             since
         FROM
             forecasts
         WHERE
-            name = '{name}'
+            city_id = {city_id}
         ORDER BY
             since DESC
         LIMIT 3) and
     DATE(date) >= DATE(NOW())
 GROUP BY
-    forecasts.date, forecasts.name
+    forecasts.date, forecasts.city_id
 ORDER BY
     date;

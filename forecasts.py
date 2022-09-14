@@ -53,7 +53,7 @@ if __name__ == '__main__':
             city_name = input(f'Enter city name number {iteration+1} : ')
 
             # find the latitude and longitude of the cities
-            geolocator = Nominatim(user_agent="user_agent")
+            geolocator = Nominatim(user_agent="user")
 
             # try valid city name
             try:

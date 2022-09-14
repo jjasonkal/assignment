@@ -4,7 +4,7 @@ from typing import List
 import psycopg2
 
 from .config import settings
-from .models.weather import Weather, DistinctNames, AverageWeather, TopMetrics, MetricsColumns
+from .models.weather import Weather, DistinctID, AverageWeather, TopMetrics, MetricsColumns
 from .queries.query_parser import query_parse
 
 
@@ -15,19 +15,20 @@ def get_db_conn():
 
 
 def latest_weekly_forecast() -> List[Weather]:
-    query = query_parse('app/queries/distinct_names.sql')
+    query = query_parse('app/queries/distinct_id.sql')
 
     with get_db_conn() as conn:
         with conn.cursor() as cursor:
             cursor.execute(query)
             columns = [column.name for column in cursor.description]
             rows = cursor.fetchall()
-            names = [DistinctNames.parse_obj(dict(zip(columns, row))) for row in rows]
+            objects = [DistinctID.parse_obj(dict(zip(columns, row))) for row in rows]
 
             response = {}
-            for distinct in names:
+            for distinct in objects:
+                city_id = distinct.id
                 name = distinct.name
-                query = query_parse('app/queries/latest_weekly_forecast.sql').format(name=name)
+                query = query_parse('app/queries/latest_weekly_forecast.sql').format(city_id=city_id)
                 cursor.execute(query)
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()
@@ -36,17 +37,17 @@ def latest_weekly_forecast() -> List[Weather]:
 
 
 def last_hour_weekly_forecast() -> List[Weather]:
-    query = query_parse('app/queries/distinct_names.sql')
+    query = query_parse('app/queries/distinct_id.sql')
 
     with get_db_conn() as conn:
         with conn.cursor() as cursor:
             cursor.execute(query)
             columns = [column.name for column in cursor.description]
             rows = cursor.fetchall()
-            names = [DistinctNames.parse_obj(dict(zip(columns, row))) for row in rows]
+            objects = [DistinctID.parse_obj(dict(zip(columns, row))) for row in rows]
 
             response = {}
-            for distinct in names:
+            for distinct in objects:
                 name = distinct.name
                 query = query_parse('app/queries/last_hour_weekly_forecast.sql')
                 cursor.execute(query)
@@ -57,20 +58,21 @@ def last_hour_weekly_forecast() -> List[Weather]:
 
 
 def average_of_last_3_forecasts() -> List[Weather]:
-    query = query_parse('app/queries/distinct_names.sql')
+    query = query_parse('app/queries/distinct_id.sql')
 
     with get_db_conn() as conn:
         with conn.cursor() as cursor:
             cursor.execute(query)
             columns = [column.name for column in cursor.description]
             rows = cursor.fetchall()
-            names = [DistinctNames.parse_obj(dict(zip(columns, row))) for row in rows]
+            objects = [DistinctID.parse_obj(dict(zip(columns, row))) for row in rows]
 
             response = {}
-            for distinct in names:
+            for distinct in objects:
+                city_id = distinct.id
                 name = distinct.name
                 # TODO remove hardcoded average of metric columns
-                query = query_parse('app/queries/average_of_last_3_forecasts.sql').format(name=name)
+                query = query_parse('app/queries/average_of_last_3_forecasts.sql').format(city_id=city_id)
                 cursor.execute(query)
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()

@@ -1,16 +1,17 @@
 SELECT
-    *
+    forecasts.*
 FROM
     forecasts
+JOIN cities ON cities.id = city_id
 WHERE
-    name = '{name}' and
+    city_id = {city_id} and
     since = (
         SELECT DISTINCT
             since
         FROM
             forecasts
         WHERE
-            name = '{name}'
+            city_id = {city_id}
         ORDER BY
             since DESC
         limit 1) and
