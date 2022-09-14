@@ -1,0 +1,20 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    container_name: postgres
+    ports:
+        - 5432:5432
+    environment:
+        - POSTGRES_USER=${DB_USERNAME}
+        - POSTGRES_PASSWORD=${DB_PASSWORD}
+  api:
+    container_name: api
+    build: ./api
+    ports:
+        - 80:80
+    restart: on-failure
+    depends_on:
+        - db
+    environment:
+      - POSTGRES_DSN=postgres://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_DATABASE}
