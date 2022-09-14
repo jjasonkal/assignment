@@ -11,7 +11,7 @@ def forecasts(latitude, longitude):
     complete_url = f'{base_url}/{seven_days_forecasts}/{parameters}/{latitude},{longitude}/{output_format}'
 
     # get method of requests module
-    response = requests.get(complete_url, auth=HTTPBasicAuth(username, 'ZeE4e6h75P'))
+    response = requests.get(complete_url, auth=HTTPBasicAuth(username, password))
 
     # json method of response object
     try:
