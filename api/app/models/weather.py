@@ -17,6 +17,10 @@ class DistinctNames(BaseModel):
     name: str
 
 
+class MetricsColumns(BaseModel):
+    column_name: str
+
+
 class AverageWeather(Metrics):
     date: str
 

@@ -4,7 +4,7 @@ from typing import List
 import psycopg2
 
 from .config import settings
-from .models.weather import Weather, DistinctNames, AverageWeather, TopMetrics
+from .models.weather import Weather, DistinctNames, AverageWeather, TopMetrics, MetricsColumns
 
 
 @contextmanager
@@ -89,13 +89,19 @@ def average_of_last_3_forecasts() -> List[Weather]:
 
 
 def top_n_locations_of_each_metric(n) -> List[Weather]:
+    query = f"SELECT column_name FROM INFORMATION_SCHEMA.columns WHERE TABLE_NAME = N'forecasts' and column_name " \
+            f"like('%2m') "
+
     with get_db_conn() as conn:
         with conn.cursor() as cursor:
-            columns = ['t_2m', 'absolute_humidity_2m', 'dew_point_2m']
+            cursor.execute(query)
+            columns = [column.name for column in cursor.description]
+            rows = cursor.fetchall()
+            metrics = [MetricsColumns.parse_obj(dict(zip(columns, row))) for row in rows]
 
             response = {}
-            for distinct in columns:
-                value = distinct
+            for distinct in metrics:
+                value = distinct.column_name
                 query = f"Select name, max({value}) as maximum From  forecasts where DATE(date) >= DATE(NOW()) Group " \
                         f"By name " \
                         f"order by max({value}) desc limit {n}; "
