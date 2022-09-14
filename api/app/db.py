@@ -8,6 +8,14 @@ from .models.weather import Weather, DistinctID, AverageWeather, TopMetrics, Met
 from .queries.query_parser import query_parse
 
 
+def response_handling(response):
+    if response:
+        return response
+    else:
+        print(" Make sure that you have created the two tables and have filled them with some values ")
+        return []
+
+
 @contextmanager
 def get_db_conn():
     with psycopg2.connect(settings.postgres_dsn) as conn:
@@ -33,7 +41,12 @@ def latest_weekly_forecast() -> List[Weather]:
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()
                 response[name] = [Weather.parse_obj(dict(zip(columns, row))) for row in rows]
-            return response
+
+            try:
+                return response_handling(response)
+            except Exception as e:
+                print(e)
+                raise SystemExit(e)
 
 
 def last_hour_weekly_forecast() -> List[Weather]:
@@ -54,7 +67,12 @@ def last_hour_weekly_forecast() -> List[Weather]:
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()
                 response[name] = [Weather.parse_obj(dict(zip(columns, row))) for row in rows]
-            return response
+
+            try:
+                return response_handling(response)
+            except Exception as e:
+                print(e)
+                raise SystemExit(e)
 
 
 def average_of_last_3_forecasts() -> List[Weather]:
@@ -77,7 +95,12 @@ def average_of_last_3_forecasts() -> List[Weather]:
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()
                 response[name] = [AverageWeather.parse_obj(dict(zip(columns, row))) for row in rows]
-            return response
+
+            try:
+                return response_handling(response)
+            except Exception as e:
+                print(e)
+                raise SystemExit(e)
 
 
 def top_n_locations_of_each_metric(n) -> List[Weather]:
@@ -99,4 +122,9 @@ def top_n_locations_of_each_metric(n) -> List[Weather]:
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()
                 response[value] = [TopMetrics.parse_obj(dict(zip(columns, row))) for row in rows]
-            return response
+
+            try:
+                return response_handling(response)
+            except Exception as e:
+                print(e)
+                raise SystemExit(e)
