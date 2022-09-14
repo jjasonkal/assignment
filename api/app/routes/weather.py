@@ -1,8 +1,6 @@
-from typing import List
-
 from fastapi import APIRouter, HTTPException
 
-from ..lib import db
+from .. import db
 from ..models.weather import Weather
 
 router = APIRouter(
@@ -14,6 +12,16 @@ router = APIRouter(
 @router.get("/latest-weekly-forecast")
 async def get_latest_weekly_forecast() -> Weather:
     weather = db.latest_weekly_forecast()
+
+    if not weather:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    return weather
+
+
+@router.get("/last-hour-weekly-forecast")
+async def get_last_hour_weekly_forecast() -> Weather:
+    weather = db.last_hour_weekly_forecast()
 
     if not weather:
         raise HTTPException(status_code=404, detail="Item not found")
