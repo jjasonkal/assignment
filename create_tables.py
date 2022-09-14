@@ -18,7 +18,7 @@ port = '5432'
 class City(Base):
     __tablename__ = 'cities'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(30), nullable=False)
 
 
 class Forecast(Base):
