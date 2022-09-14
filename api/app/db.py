@@ -3,8 +3,8 @@ from typing import List
 
 import psycopg2
 
-from api.app.config import settings
-from api.app.models.weather import Weather, DistinctNames, AverageWeather, TopMetrics
+from .config import settings
+from .models.weather import Weather, DistinctNames, AverageWeather, TopMetrics
 
 
 @contextmanager
@@ -14,7 +14,7 @@ def get_db_conn():
 
 
 def latest_weekly_forecast() -> List[Weather]:
-    query = f"SELECT DISTINCT name FROM forecasts;"
+    query = f"SELECT DISTINCT name FROM forecasts where DATE(date) >= DATE(NOW());"
 
     with get_db_conn() as conn:
         with conn.cursor() as cursor:
@@ -28,7 +28,8 @@ def latest_weekly_forecast() -> List[Weather]:
                 name = distinct.name
                 query = f"select * from forecasts where name = '{name}' and " \
                         f"since = (select distinct  since from " \
-                        f"forecasts where name = '{name}' order by since desc limit 1)"
+                        f"forecasts where name = '{name}' order by since desc limit 1)" \
+                        f"and DATE(date) >= DATE(NOW())"
                 cursor.execute(query)
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()
@@ -37,7 +38,7 @@ def latest_weekly_forecast() -> List[Weather]:
 
 
 def last_hour_weekly_forecast() -> List[Weather]:
-    query = f"SELECT DISTINCT name FROM forecasts;"
+    query = f"SELECT DISTINCT name FROM forecasts where DATE(date) >= DATE(NOW());"
 
     with get_db_conn() as conn:
         with conn.cursor() as cursor:
@@ -50,7 +51,8 @@ def last_hour_weekly_forecast() -> List[Weather]:
             for distinct in names:
                 name = distinct.name
                 query = f"WITH ranked_messages AS (SELECT m.*, ROW_NUMBER() OVER (PARTITION BY DATE(date) ORDER BY " \
-                        f"date DESC) AS rn FROM forecasts AS m) SELECT * FROM ranked_messages WHERE rn = 1 " \
+                        f"date DESC) AS rn FROM forecasts AS m) SELECT * FROM ranked_messages WHERE rn = 1 and DATE(" \
+                        f"date) >= DATE(NOW())" \
                         f"ORDER BY date; "
                 cursor.execute(query)
                 columns = [column.name for column in cursor.description]
@@ -60,7 +62,7 @@ def last_hour_weekly_forecast() -> List[Weather]:
 
 
 def average_of_last_3_forecasts() -> List[Weather]:
-    query = f"SELECT DISTINCT name FROM forecasts;"
+    query = f"SELECT DISTINCT name FROM forecasts where DATE(date) >= DATE(NOW());"
 
     with get_db_conn() as conn:
         with conn.cursor() as cursor:
@@ -75,7 +77,8 @@ def average_of_last_3_forecasts() -> List[Weather]:
                 query = f"select date, avg(t_2m) as t_2m, avg(dew_point_2m) as dew_point_2m, " \
                         f"avg(absolute_humidity_2m) as absolute_humidity_2m from forecasts  where name = '{name}' " \
                         f"and since in" \
-                        f" (select distinct since from forecasts where name = '{name}' order by since desc limit 3) " \
+                        f" (select distinct since from forecasts where name = '{name}' order by since desc limit 3) and" \
+                        f" DATE(date) >= DATE(NOW())" \
                         f"group by " \
                         f"forecasts.date, forecasts.name order by date; "
                 cursor.execute(query)
@@ -93,7 +96,8 @@ def top_n_locations_of_each_metric(n) -> List[Weather]:
             response = {}
             for distinct in columns:
                 value = distinct
-                query = f"Select name, max({value}) as maximum From  forecasts Group By name " \
+                query = f"Select name, max({value}) as maximum From  forecasts where DATE(date) >= DATE(NOW()) Group " \
+                        f"By name " \
                         f"order by max({value}) desc limit {n}; "
                 cursor.execute(query)
                 columns = [column.name for column in cursor.description]
