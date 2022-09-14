@@ -33,7 +33,7 @@ if __name__ == '__main__':
     base_url = "https://api.meteomatics.com"
 
     # seven days time points
-    seven_days_forecasts = 'todayT00:00:00ZP1W:PT1H'
+    seven_days_forecasts = 'todayT00:00:00ZPT167H:PT1H'
 
     # describes the temperature 2 meters above ground (Celsius)
     temperature = 't_2m:C'
