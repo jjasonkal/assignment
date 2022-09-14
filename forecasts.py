@@ -8,7 +8,7 @@ from fill_table import fill_table_with_content
 
 def forecasts(latitude, longitude):
     # complete url address
-    complete_url = f'{base_url}/{seven_days_forecasts}/{parameter}/{latitude},{longitude}/{output_format}'
+    complete_url = f'{base_url}/{seven_days_forecasts}/{parameters}/{latitude},{longitude}/{output_format}'
 
     # get method of requests module
     response = requests.get(complete_url, auth=HTTPBasicAuth(username, 'ZeE4e6h75P'))
@@ -17,7 +17,7 @@ def forecasts(latitude, longitude):
     try:
         x = response.json()
         if x['status'] == 'OK':
-            return x['data'][0]['coordinates'][0]['dates']
+            return x['data']
         else:
             print(" City Not Found ")
     except requests.exceptions.RequestException as e:
@@ -36,7 +36,12 @@ if __name__ == '__main__':
     seven_days_forecasts = 'todayT00:00:00ZP1W:PT1H'
 
     # describes the temperature 2 meters above ground (Celsius)
-    parameter = 't_2m:C'
+    temperature = 't_2m:C'
+    # describes the absolute humidity 2 meters above ground (gm3)
+    humidity = 'absolute_humidity_2m:gm3'
+    # describes the instantaneous value of the dew point temperature 2 meters above ground (Celsius)
+    dew_point = 'dew_point_2m:C'
+    parameters = f'{temperature},{humidity},{dew_point}'
 
     # api output
     output_format = 'json'

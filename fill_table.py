@@ -22,7 +22,11 @@ connection = pg.connect(f"host={host} dbname={dbname} user={username} password={
 
 def fill_table_with_content(name, content):
     now = datetime.now()
-    df = pd.DataFrame(content)
+    df = pd.DataFrame()
+    df['date'] = [x['date'] for x in content[0]['coordinates'][0]['dates']]
+    for metric in content:
+        df[metric['parameter'].split(':')[0]] = [x['value'] for x in metric['coordinates'][0]['dates']]
+
     df['name'] = name
     df['since'] = now
     table_name = 'forecasts'
