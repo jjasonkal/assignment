@@ -3,7 +3,7 @@ from requests.auth import HTTPBasicAuth
 from geopy.geocoders import Nominatim
 from decouple import config
 
-from create_table import create_table_with_content
+from fill_table import fill_table_with_content
 
 
 def forecasts(latitude, longitude):
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     base_url = "https://api.meteomatics.com"
 
     # seven days time points
-    seven_days_forecasts = 'now+24H--now+168H:P1D'
+    seven_days_forecasts = 'todayT00:00:00ZP1W:PT1H'
 
     # describes the temperature 2 meters above ground (Celsius)
     parameter = 't_2m:C'
@@ -55,8 +55,8 @@ if __name__ == '__main__':
                 location = geolocator.geocode(city_name)
                 lat = str(location.latitude)
                 lon = str(location.longitude)
-                create_table_with_content(city_name, forecasts(lat, lon))
-                print(f'Created Table - {city_name}')
+                fill_table_with_content(city_name, forecasts(lat, lon))
+                print(f'New forecasts stored for {city_name}')
                 invalid_city = False
             except AttributeError as e:
                 print('\nEnter a valid city name!')
