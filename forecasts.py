@@ -60,8 +60,8 @@ if __name__ == '__main__':
                 location = geolocator.geocode(city_name)
                 lat = str(location.latitude)
                 lon = str(location.longitude)
-                fill_table_with_content(city_name, forecasts(lat, lon))
-                print(f'New forecasts stored for {city_name}')
+                fill_table_with_content(city_name.lower(), forecasts(lat, lon))
+                print(f'New forecasts stored for {city_name.lower()}')
                 invalid_city = False
             except AttributeError as e:
                 print('\nEnter a valid city name!')
