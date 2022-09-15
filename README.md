@@ -6,7 +6,7 @@
 
 # Instructions
 
-Make sure you have installed docker and docker-compose.
+Make sure you have installed docker (version 20.10.18) and docker-compose (version 1.27.0).
 
 Create .env file in the root folder in which you will store sensitive information about the mateomatics Weather API authentication and the Database Management System connection.
 
