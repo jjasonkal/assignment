@@ -3,7 +3,7 @@ WITH ranked_messages AS (
         m.*,
         ROW_NUMBER() OVER (PARTITION BY DATE(date) ORDER BY date desc, since DESC) AS rn
     FROM
-        forecasts AS m
+        {table_forecasts} AS m
     where
         city_id = {city_id})
 SELECT

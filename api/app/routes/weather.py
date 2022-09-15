@@ -20,8 +20,8 @@ async def get_latest_weekly_forecast() -> Weather:
 
 
 @router.get("/last-hour-weekly-forecast")
-async def get_last_hour_weekly_forecast() -> Weather:
-    weather = db.last_hour_weekly_forecast()
+async def get_last_hour_weekly_forecast(test=False) -> Weather:
+    weather = db.last_hour_weekly_forecast(test)
 
     if not weather:
         raise HTTPException(status_code=404, detail="Item not found")

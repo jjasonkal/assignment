@@ -2,4 +2,4 @@ SELECT DISTINCT
     name,
     id
 FROM
-    cities
+    {table_cities}
