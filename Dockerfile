@@ -7,6 +7,8 @@ RUN pip install -r requirements.txt
 
 COPY *.py /app/
 COPY .env /app/
+COPY docker_entrypoint.sh /app/
 
-CMD ["python3", "create_tables.py"]
-CMD ["python3", "forecasts.py"]
+RUN chmod a+x docker_entrypoint.sh
+
+CMD ["./docker_entrypoint.sh"]
