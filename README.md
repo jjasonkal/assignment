@@ -25,10 +25,10 @@ DB_PASSWORD=postgres
 Everything is ready to build the FastAPI image and the PostgreSQL image and deploy them:
 
 
-```
-$ docker-compose build
+```bash
+docker-compose build
 
-$ docker-compose up
+docker-compose up
 ```
 
 
@@ -41,20 +41,20 @@ It is time to create the tables in the database and then to input 3 locations to
 It is recommended to use docker to run the Python scripts.
 
 
-```
-$ docker build -t filler .
+```bash
+docker build -t filler .
 
-$ docker run -it --network host filler
+docker run -it --network host filler
 ```
 
 
 Or you can run them directly if you have installed all the requirements from requirements.txt.
 
 
-```
-$ python3 create_tables.py
+```bash
+python3 create_tables.py
 
-$ python3 forecasts.py
+python3 forecasts.py
 ```
 
 
@@ -71,16 +71,16 @@ If you have any trouble with the library decouple make sure that you uninstall *
  
 
 
-```
-$ pip uninstall decouple
+```bash
+pip uninstall decouple
 ```
 
 
 And ensure you have **python-decouple** installed:
 
 
-```
-$ pip install python-decouple
+```bash
+pip install python-decouple
 ```
 
 
