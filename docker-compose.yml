@@ -1,7 +1,8 @@
 version: '3'
 services:
   db:
-    image: postgres
+    platform: linux/x86_64
+    image: postgres:14.5
     container_name: postgres
     ports:
         - 5432:5432
@@ -23,3 +24,8 @@ services:
         - db
     environment:
       - POSTGRES_DSN=postgres://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_DATABASE}
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://127.0.0.1/docs || exit 1" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
