@@ -26,7 +26,7 @@ def test_top_n_locations_of_each_metric(n):
 
 def test_last_hour_weekly_forecast_functionality():
     response = requests.get(f'{base_url}/last-hour-weekly-forecast',
-                            params={'test': True}).json()
+                            params={'test': 'test'}).json()
     correct = {'athens': [], 'rome': [
         {'t_2m': 22.2, 'absolute_humidity_2m': 19.1, 'dew_point_2m': 21.8, 'date': '2099-09-15T23:00:00+00:00',
          'since': '2099-09-15T14:01:53.301000+00:00'},
@@ -38,7 +38,7 @@ def test_last_hour_weekly_forecast_functionality():
 
 def test_average_of_last_3_forecasts_functionality():
     response = requests.get(f'{base_url}/average-of-last-3-forecasts',
-                            params={'test': True}).json()
+                            params={'test': 'test'}).json()
     correct = {'athens': [],
                'rome': [{'t_2m': 22.1, 'absolute_humidity_2m': 13.7, 'dew_point_2m': 16.5,
                          'date': '2099-09-15T03:00:00+00:00'},
@@ -136,7 +136,7 @@ def test_average_of_last_3_forecasts_functionality():
 
 def test_top_n_locations_of_each_metric_functionality():
     response = requests.get(f'{base_url}/top-n-locations-of-each-metric',
-                            params={'n': 1, 'test': True}).json()
+                            params={'n': 1, 'test': 'test'}).json()
     correct = {'t_2m': [{'name': 'rome', 'maximum': 28.1}], 'absolute_humidity_2m': [{'name': 'rome', 'maximum': 19.5}],
                'dew_point_2m': [{'name': 'rome', 'maximum': 22.3}]}
     assert response == correct
