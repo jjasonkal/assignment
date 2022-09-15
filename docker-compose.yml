@@ -15,6 +15,7 @@ services:
       timeout: 3s
       retries: 3
   api:
+    platform: linux/x86_64
     container_name: api
     build: ./api
     ports:
@@ -30,6 +31,7 @@ services:
       timeout: 3s
       retries: 3
   filler:
+    platform: linux/x86_64
     container_name: filler
     build: ./
     network_mode: host
