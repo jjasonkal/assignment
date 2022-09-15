@@ -85,7 +85,7 @@ with open(Path(__file__).parent / 'csv/test_forecasts.csv', 'r') as f:
     column_names = True
     for row in reader:
         if not column_names:
-            query = f"INSERT INTO test_forecasts VALUES(CAST('{row[0]}' AS timestamp),{float(row[1])},{float(row[2])},{float(row[3])},CAST('{row[0]}' AS timestamp),{int(row[5])});"
+            query = f"INSERT INTO test_forecasts VALUES(CAST('{row[0]}' AS timestamp),{float(row[1])},{float(row[2])},{float(row[3])},CAST('{row[4]}' AS timestamp),{int(row[5])});"
             cur.execute(query)
             conn.commit()
         column_names = False

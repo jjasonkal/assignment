@@ -30,8 +30,8 @@ async def get_last_hour_weekly_forecast(test=False) -> Weather:
 
 
 @router.get("/average-of-last-3-forecasts")
-async def get_average_of_last_3_forecasts() -> Weather:
-    weather = db.average_of_last_3_forecasts()
+async def get_average_of_last_3_forecasts(test=False) -> Weather:
+    weather = db.average_of_last_3_forecasts(test)
 
     if not weather:
         raise HTTPException(status_code=404, detail="Item not found")
@@ -40,8 +40,8 @@ async def get_average_of_last_3_forecasts() -> Weather:
 
 
 @router.get("/top-n-locations-of-each-metric")
-async def get_top_n_locations_of_each_metric(n: int) -> Weather:
-    weather = db.top_n_locations_of_each_metric(n)
+async def get_top_n_locations_of_each_metric(n: int, test=False) -> Weather:
+    weather = db.top_n_locations_of_each_metric(n, test)
 
     if not weather:
         raise HTTPException(status_code=404, detail="Item not found")

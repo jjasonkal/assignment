@@ -23,7 +23,7 @@ def get_db_conn():
 
 
 def latest_weekly_forecast() -> List[Weather]:
-    query = query_parse('app/queries/distinct_id.sql')
+    query = query_parse('app/queries/distinct_id.sql').format(table_cities='cities')
 
     with get_db_conn() as conn:
         with conn.cursor() as cursor:
@@ -68,7 +68,8 @@ def last_hour_weekly_forecast(test=False) -> List[Weather]:
             for distinct in objects:
                 city_id = distinct.id
                 name = distinct.name
-                query = query_parse('app/queries/last_hour_weekly_forecast.sql').format(city_id=city_id, table_forecasts=table_forecasts)
+                query = query_parse('app/queries/last_hour_weekly_forecast.sql').format(city_id=city_id,
+                                                                                        table_forecasts=table_forecasts)
                 cursor.execute(query)
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()
@@ -81,8 +82,13 @@ def last_hour_weekly_forecast(test=False) -> List[Weather]:
                 raise SystemExit(e)
 
 
-def average_of_last_3_forecasts() -> List[Weather]:
-    query = query_parse('app/queries/distinct_id.sql')
+def average_of_last_3_forecasts(test=False) -> List[Weather]:
+    table_cities = 'cities'
+    table_forecasts = 'forecasts'
+    if test:
+        table_cities = 'test_cities'
+        table_forecasts = 'test_forecasts'
+    query = query_parse('app/queries/distinct_id.sql').format(table_cities=table_cities)
 
     with get_db_conn() as conn:
         with conn.cursor() as cursor:
@@ -96,7 +102,7 @@ def average_of_last_3_forecasts() -> List[Weather]:
                 city_id = distinct.id
                 name = distinct.name
                 # TODO remove hardcoded average of metric columns
-                query = query_parse('app/queries/average_of_last_3_forecasts.sql').format(city_id=city_id)
+                query = query_parse('app/queries/average_of_last_3_forecasts.sql').format(city_id=city_id, table_forecasts=table_forecasts)
                 cursor.execute(query)
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()
@@ -109,7 +115,12 @@ def average_of_last_3_forecasts() -> List[Weather]:
                 raise SystemExit(e)
 
 
-def top_n_locations_of_each_metric(n) -> List[Weather]:
+def top_n_locations_of_each_metric(n, test=False) -> List[Weather]:
+    table_cities = 'cities'
+    table_forecasts = 'forecasts'
+    if test:
+        table_cities = 'test_cities'
+        table_forecasts = 'test_forecasts'
     # TODO give more generic expression for metric columns
     query = query_parse('app/queries/metric_column_names.sql')
 
@@ -123,7 +134,7 @@ def top_n_locations_of_each_metric(n) -> List[Weather]:
             response = {}
             for distinct in metrics:
                 value = distinct.column_name
-                query = query_parse('app/queries/top_n_locations_of_each_metric.sql').format(value=value, n=n)
+                query = query_parse('app/queries/top_n_locations_of_each_metric.sql').format(value=value, n=n, table_cities=table_cities, table_forecasts=table_forecasts)
                 cursor.execute(query)
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()

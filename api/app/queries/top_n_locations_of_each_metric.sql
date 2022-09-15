@@ -1,9 +1,9 @@
 SELECT
-    cities.name,
+    {table_cities}.name,
     max({value}) as maximum
 FROM
-    forecasts
-JOIN cities on cities.id = forecasts.city_id
+    {table_forecasts}
+JOIN {table_cities} on {table_cities}.id = {table_forecasts}.city_id
 WHERE
     DATE(date) >= DATE(NOW())
 GROUP BY
