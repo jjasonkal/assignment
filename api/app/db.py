@@ -61,8 +61,9 @@ def last_hour_weekly_forecast() -> List[Weather]:
 
             response = {}
             for distinct in objects:
+                city_id = distinct.id
                 name = distinct.name
-                query = query_parse('app/queries/last_hour_weekly_forecast.sql')
+                query = query_parse('app/queries/last_hour_weekly_forecast.sql').format(city_id=city_id)
                 cursor.execute(query)
                 columns = [column.name for column in cursor.description]
                 rows = cursor.fetchall()

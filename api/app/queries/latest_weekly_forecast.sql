@@ -2,7 +2,6 @@ SELECT
     forecasts.*
 FROM
     forecasts
-JOIN cities ON cities.id = city_id
 WHERE
     city_id = {city_id} and
     since = (

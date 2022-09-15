@@ -1,9 +1,11 @@
 WITH ranked_messages AS (
     SELECT
         m.*,
-        ROW_NUMBER() OVER (PARTITION BY DATE(date) ORDER BY date DESC) AS rn
+        ROW_NUMBER() OVER (PARTITION BY DATE(date) ORDER BY date desc, since DESC) AS rn
     FROM
-        forecasts AS m)
+        forecasts AS m
+    where
+        city_id = {city_id})
 SELECT
     *
 FROM
@@ -12,4 +14,4 @@ WHERE
     rn = 1 and
     DATE(date) >= DATE(NOW())
 ORDER BY
-    date;
+    rn,city_id, date;
