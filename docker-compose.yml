@@ -29,3 +29,11 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
+  filler:
+    container_name: filler
+    build: ./
+    network_mode: host
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db

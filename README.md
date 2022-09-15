@@ -22,15 +22,16 @@ DB_PASSWORD=postgres
 ```
 
 
-Everything is ready to build the FastAPI image and the PostgreSQL image and deploy them:
-
-
+Everything is ready to build the FastAPI image, the PostgreSQL image, and the filler image which is the program that gets the forecasts from meteomatics Weather API and stores them in the database.
 ```bash
 docker-compose build
-
-docker-compose up
 ```
 
+Deploy only PostgreSQL and FastAPI:
+
+```bash
+docker-compose up db api
+```
 
 If everything works correctly you can find a UI version of the API in:
 
@@ -42,9 +43,7 @@ It is recommended to use docker to run the Python scripts.
 
 
 ```bash
-docker build -t filler .
-
-docker run -it --network host filler
+docker-compose run filler
 ```
 
 
